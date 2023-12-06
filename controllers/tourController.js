@@ -26,10 +26,10 @@ exports.getAllTours = async (req, res) => {
   try {
     //Build Query
     // 1) Filtering
-    console.log(req.query,"sdsss")
+    console.log(req.query, 'sdsss');
     let queryObj = { ...req.query };
 
-    let excludedFields = ['page', 'limit', 'sort', fields];
+    let excludedFields = ['page', 'limit', 'sort', 'fields'];
 
     excludedFields.forEach((el) => delete queryObj[el]);
 
@@ -37,16 +37,46 @@ exports.getAllTours = async (req, res) => {
     let queryString = JSON.stringify(queryObj);
     queryString = queryString.replace(
       /\b(gte|gt|lte|lt)\b/g,
-      match => `$${match}`
+      (match) => `$${match}`
     );
 
     console.log(JSON.parse(queryString));
 
-    const query = await Tour.find(queryObj);
-
-    const tours = await query
+    let query = Tour.find(JSON.parse(queryString));
 
     // const tours = await Tour.find().where('duration').equals(5).where('difficult').equals('easy')
+    //2) Sorting
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      console.log(sortBy);
+      query = query.sort(sortBy);
+    } else {
+      query.sort('-createdAt');
+    }
+
+    //3)Field Limiting
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields);
+    } else {
+      query = query.select('-__v');
+    }
+    //4) pagination
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
+    const skip = (page - 1) * limit;
+    //page=3&limit=10,1-10,page1, 11-20,page2, 21-30 page3
+
+    query = query.skip(skip).limit(limit);
+
+    if (req.query.page) {
+      const numTours = await Tour.countDocuments();
+      if (skip >= numTours) throw new Error('This page does not exist');
+    }
+
+    //Execute query
+    const tours = await query;
+    //query.sort().select().skip().limit()
 
     console.log(tours, 'gettours');
     res.status(200).json({
@@ -57,6 +87,7 @@ exports.getAllTours = async (req, res) => {
       },
     });
   } catch (error) {
+    console.log(error);
     res.status(400).json({
       status: 'fail',
       message: error,

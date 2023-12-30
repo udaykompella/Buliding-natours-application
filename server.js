@@ -8,8 +8,8 @@ const DB = "mongodb+srv://kompellauday9:uday@cluster0.kp5pxnf.mongodb.net/NATOUR
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
+    // useCreateIndex: true,
+    // useFindAndModify: false,
     useUnifiedTopology: true 
   })
   .then((con) => {

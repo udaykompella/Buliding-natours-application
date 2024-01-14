@@ -46,7 +46,7 @@ exports.getAllTours = async (req, res) => {
       .limitFields();
     //query.sort().select().skip().limit()
     // let tours = await features.query;
-    let tours = features;
+    let tours = await features.query;
 
     console.log(tours, "gettours");
     res.status(200).json({
@@ -122,7 +122,7 @@ exports.getTourStats = async (req, res) => {
       },
       {
         $group: {
-          _id: null,
+          _id: "$difficulty",
           numOfTours: { $sum: 1 },
           numRatings: { $sum: "$ratingsQuantity" },
           avgRatiing: { $avg: "$ratingsAverage" },

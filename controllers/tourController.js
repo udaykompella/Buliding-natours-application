@@ -28,6 +28,7 @@ exports.getAllTours = async (req, res) => {
   try {
     //Build Query
     // 1) Filtering
+    console.log(req,"reonalltours")
     console.log(req.query, "sdsss");
 
     // const tours = await Tour.find().where('duration').equals(5).where('difficult').equals('easy')
@@ -66,6 +67,7 @@ exports.getAllTours = async (req, res) => {
 };
 exports.getTour = async (req, res) => {
   try {
+    console.log(req.params.id,"idoftour")
     const tour = await Tour.findById(req.params.id);
     res.status(200).json({
       status: "success",

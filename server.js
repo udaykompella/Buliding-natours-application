@@ -13,7 +13,7 @@ mongoose
     useUnifiedTopology: true 
   })
   .then((con) => {
-    // console.log(con.connections);
+    // console.log(con.connections);/
     console.log('db connection successful');
   });
 

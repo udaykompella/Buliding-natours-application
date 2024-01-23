@@ -6,11 +6,11 @@ const AppError = require("./../utils/appError");
 
 exports.updateTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
+    // new: true,
     runValidators: true,
   });
 
-  if (!tour) {
+  if (!tour) {  
     return next(new AppError("No tour found with that Id", 404));
   }
 

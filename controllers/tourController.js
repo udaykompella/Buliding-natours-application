@@ -23,8 +23,8 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllTours = catchAsync(async (req, res, next) => {
-  console.log(req, "reonalltours");
-  console.log(req.query, "sdsss");
+  // console.log(req, "reonalltours");
+  // console.log(req.query, "sdsss");
   let features = new apiFeatures(Tour.find(), req.query)
     .filter()
     .sort()
@@ -32,7 +32,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
     .limitFields();
   let tours = await features.query;
 
-  console.log(tours, "gettours");
+  // console.log(tours, "gettours");
   res.status(200).json({
     status: "success",
     results: tours.length,

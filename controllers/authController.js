@@ -1,3 +1,4 @@
+const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
 const User = require("./../models/UserModel");
 const catchAsync = require("./../utils/catchAsync");
@@ -16,6 +17,8 @@ exports.signup = catchAsync(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
+    role: req.body.role,
+    // passwordChangedAt: req.body.passwordChangedAt,
   });
   const token = signToken(newUser._id);
   res.status(201).json({
@@ -51,7 +54,7 @@ exports.login = async (req, res, next) => {
   });
 };
 
-exports.protect = (req, res, next) => {
+exports.protect = catchAsync(async (req, res, next) => {
   //1) Getting token and check if its there
   let token;
 
@@ -61,7 +64,7 @@ exports.protect = (req, res, next) => {
   ) {
     token = req.headers.authorization.split(" ")[1];
   }
-  console.log(token);
+  // console.log(token);
 
   if (!token) {
     return next(
@@ -70,9 +73,40 @@ exports.protect = (req, res, next) => {
   }
 
   //2) verificatoion token
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  // console.log(decoded);
 
   //3)check if user still exits
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
+    return next(
+      new AppError("The user belonging to this token does no longer exist", 401)
+    );
+  }
 
   //4)check if user change password after token is issued
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError("User recently changed password! Please Login Again.", 401)
+    );
+  }
+  //Grant Access to protected route
+  req.user = currentUser;
+  // console.log(req.user, "req.user");
   next();
+});
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    //roles['admin','lead-guide]. role='user'
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError("You do not have to permission this action", 403)
+      );
+    }
+
+    next();
+  };
 };
+
+// exports.forgotPassword = (req,res,next)

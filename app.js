@@ -2,16 +2,50 @@ const express = require("express");
 const fs = require("fs");
 const app = express();
 const AppError = require("./utils/appError");
-
+const rateLimit = require("express-rate-limit");
+const helmet = requiire("helmet");
+const mongoSanitize = require('express-mongo-sanitize')
+const xss = require('xss-clean')
+const hpp = require('hpp')
 const tourRouter = require("./Routes/tourRoutes");
 const userRouter = require("./Routes/userRoutes");
-const globalErrorHandler = require('./controllers/errorController')
+const globalErrorHandler = require("./controllers/errorController");
 
-app.use(express.json()); /// this is a middleware which is used to parse the request recieved from the client
-app.use((req, res, next) => {
-  console.log("Hello from the middleware");
-  next();
+//1)GLOBAL MIDDLEWARES
+//set security http headers
+app.use(helmet());
+
+//limit request from same api
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: "Too many requests from this IP, please try again in an hour",
 });
+app.use("/api", limiter);
+
+//Body parser reading data from body into req.body
+app.use(
+  express.json({
+    limit: "10kb",
+  })
+); /// this is a middleware which is used to parse the request recieved from the client
+
+//Data sanitization against NOSQL query injection
+app.use(mongoSanitize())
+
+//Data sanitization against XSS
+app.use(xss())
+//prevent parameter polluition
+app.use(hpp({
+  whitelist:[
+    'duration','ratingsQuantity','ratingsAverage','maxGroupSize','difficulty','price'
+  ]
+}))
+
+//serving static filess
+app.use(express.static(`${__dirname}/public`));
+
+//Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   next();

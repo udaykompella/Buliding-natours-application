@@ -3,13 +3,14 @@ const fs = require("fs");
 const app = express();
 const AppError = require("./utils/appError");
 const rateLimit = require("express-rate-limit");
-const helmet = requiire("helmet");
+const helmet = require("helmet");
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const hpp = require('hpp')
 const tourRouter = require("./Routes/tourRoutes");
 const userRouter = require("./Routes/userRoutes");
 const globalErrorHandler = require("./controllers/errorController");
+// const globalErrorHandler = require("./dev-data/data/import-dev-data");
 
 //1)GLOBAL MIDDLEWARES
 //set security http headers

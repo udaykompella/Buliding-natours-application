@@ -4,20 +4,18 @@ dotenv.config({ path: './config.env' });
 const Tour = require('./../../models/TourModel')
 const fs = require('fs')
 
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
+const DB =
+  "mongodb+srv://kompellauday9:uday@cluster0.kp5pxnf.mongodb.net/NATOURS";
 
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
+    // useCreateIndex: true,
+    // useFindAndModify: false,
   })
   .then((con) => {
     console.log(con.connections);
-    console.log('db connection successful');
+    console.log("db connection successful");
   });
   const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, "utf-8"));
 

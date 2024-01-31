@@ -10,6 +10,7 @@ const hpp = require('hpp')
 const tourRouter = require("./Routes/tourRoutes");
 const userRouter = require("./Routes/userRoutes");
 const globalErrorHandler = require("./controllers/errorController");
+const reviewRoute = require("./Routes/reviewRouter");
 // const globalErrorHandler = require("./dev-data/data/import-dev-data");
 
 //1)GLOBAL MIDDLEWARES
@@ -32,16 +33,23 @@ app.use(
 ); /// this is a middleware which is used to parse the request recieved from the client
 
 //Data sanitization against NOSQL query injection
-app.use(mongoSanitize())
+app.use(mongoSanitize());
 
 //Data sanitization against XSS
-app.use(xss())
+app.use(xss());
 //prevent parameter polluition
-app.use(hpp({
-  whitelist:[
-    'duration','ratingsQuantity','ratingsAverage','maxGroupSize','difficulty','price'
-  ]
-}))
+app.use(
+  hpp({
+    whitelist: [
+      "duration",
+      "ratingsQuantity",
+      "ratingsAverage",
+      "maxGroupSize",
+      "difficulty",
+      "price",
+    ],
+  })
+);
 
 //serving static filess
 app.use(express.static(`${__dirname}/public`));
@@ -54,6 +62,7 @@ app.use((req, res, next) => {
 
 app.use("/api/v1/tours", tourRouter); // This acts as a middleware that is when new request hits it goes into middleware stack
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/reviews", reviewRoute);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Cannot find ${req.originalUrl} on the server`, 404));

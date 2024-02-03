@@ -9,9 +9,11 @@ Router.route("/")
   .post(
     authContoller.protect,
     authContoller.restrictTo("user"),
+    reviewController.setTourUserIds,
     reviewController.createReview
   );
 Router.route("/:id")
+  .get(reviewController.getReview)
   .patch(reviewController.updateReview)
   .delete(reviewController.deleteReview);
 

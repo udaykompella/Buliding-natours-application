@@ -1,6 +1,7 @@
 const User = require("./../models/UserModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
+const factory = require("./../controllers/handleFactory");
 
 const filterObj = (obj, ...allowedFields) => {
   let newObj = {};
@@ -67,15 +68,7 @@ exports.createUser = (req, res) => {
     message: "Route is not yet implemented",
   });
 };
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: "err",
-    message: "Route is not yet implemented",
-  });
-};
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: "err",
-    message: "Route is not yet implemented",
-  });
-};
+
+//Donot update passwords with this
+exports.updateUser = factory.updateOne(User);
+exports.deleteUser = factory.deleteOne(User);

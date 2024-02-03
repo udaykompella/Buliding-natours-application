@@ -1,32 +1,16 @@
 const fs = require("fs");
 const Tour = require("./../models/TourModel");
-const apiFeatures = require("./../apiFeatures");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
 const factory = require("./../controllers/handleFactory");
 
 exports.updateTour = factory.updateOne(Tour);
 
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  // console.log(req, "reonalltours");
-  // console.log(req.query, "sdsss");
-  let features = new apiFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .paginate()
-    .limitFields();
-  let tours = await features.query;
+exports.getAllTours = factory.getAll(Tour);
 
-  // console.log(tours, "gettours");
-  res.status(200).json({
-    status: "success",
-    results: tours.length,
-    data: {
-      tours,
-    },
-  });
+exports.getTour = factory.getOne(Tour, {
+  path: "reviews",
 });
-exports.getTour = factory.getOne(Tour, { path: "reviews" });
 
 exports.createTour = factory.createOne(Tour);
 

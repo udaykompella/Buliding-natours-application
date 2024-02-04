@@ -63,9 +63,12 @@ exports.getOne = (Model, popOptions) =>
   });
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
+    //Allow nested routes on tour
+    let filter = {};
+    if (req.params.tourId) filter = { tour: req.params.tourId };
     // console.log(req, "reonalltours");
     // console.log(req.query, "sdsss");
-    let features = new apiFeatures(Model.find(), req.query)
+    let features = new apiFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
       .paginate()

@@ -11,6 +11,10 @@ const router = express.Router();
 router.use('/:tourId/reviews',reviewRouter)
 
 router
+  .route("/tours-within/:distance/center/:latlng/unit/:unit")
+  .get(tourController.getToursWithin);
+
+router
   .route("/")
   .get(tourController.getAllTours)
   .post(

@@ -66,7 +66,10 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.status(200).render("base");
+  res.status(200).render("base", {
+    tour: "The Forest Hiker",
+    user: "Jonas",
+  });
 });
 app.use("/api/v1/tours", tourRouter); // This acts as a middleware that is when new request hits it goes into middleware stack
 app.use("/api/v1/users", userRouter);

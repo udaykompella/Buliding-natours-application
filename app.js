@@ -12,6 +12,8 @@ const tourRouter = require("./Routes/tourRoutes");
 const userRouter = require("./Routes/userRoutes");
 const globalErrorHandler = require("./controllers/errorController");
 const reviewRoute = require("./Routes/reviewRouter");
+const viewRoute = require("./Routes/viewRoutes");
+
 // const globalErrorHandler = require("./dev-data/data/import-dev-data");
 
 app.set("view engine", "pug");
@@ -65,23 +67,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => {
-  res.status(200).render("base", {
-    tour: "The Forest Hiker",
-    user: "Jonas",
-  });
-});
-
-app.get("/overview", (req, res) => {
-  res.status(200).render("overview", {
-    title: "All Tours",
-  });
-});
-app.get("/tour", (req, res) => {
-  res.status(200).render("tour", {
-    title: "The Forest Hiker Tour",
-  });
-});
+app.use("/", viewRoute);
 app.use("/api/v1/tours", tourRouter); // This acts as a middleware that is when new request hits it goes into middleware stack
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/reviews", reviewRoute);

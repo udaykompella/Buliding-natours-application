@@ -8,6 +8,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
+const cookieParser = require("cookie-parser");
 const tourRouter = require("./Routes/tourRoutes");
 const userRouter = require("./Routes/userRoutes");
 const globalErrorHandler = require("./controllers/errorController");
@@ -41,6 +42,7 @@ app.use(
     limit: "10kb",
   })
 ); /// this is a middleware which is used to parse the request recieved from the client
+app.use(cookieParser());
 
 //Data sanitization against NOSQL query injection
 app.use(mongoSanitize());
@@ -64,6 +66,7 @@ app.use(
 //Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
+  console.log(req.cookies);
   next();
 });
 

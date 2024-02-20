@@ -42,6 +42,7 @@ app.use(
     limit: "10kb",
   })
 ); /// this is a middleware which is used to parse the request recieved from the client
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
 
 //Data sanitization against NOSQL query injection

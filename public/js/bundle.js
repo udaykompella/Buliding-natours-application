@@ -12303,7 +12303,7 @@ var logOutBtn = document.querySelector(".nav__el--logout");
 var userDataForm = document.querySelector(".form-user-data");
 var userPasswordForm = document.querySelector(".form-user-password");
 
-//values
+//values//
 
 //Delegation
 if (mapBox) {
@@ -12323,12 +12323,12 @@ if (logOutBtn) logOutBtn.addEventListener("click", _login.logout);
 if (userDataForm) {
   userDataForm.addEventListener("submit", function (e) {
     e.preventDefault();
-    var email = document.getElementById("email").value;
-    var name = document.getElementById("name").value;
-    (0, _updateSettings.updateSettings)({
-      name: name,
-      email: email
-    }, "data");
+    var form = new FormData();
+    form.append('name', document.getElementById("name").value);
+    form.append('email', document.getElementById("email").value);
+    form.append('photo', document.getElementById('photo').files[0]);
+    console.log(form);
+    (0, _updateSettings.updateSettings)(form, "data");
   });
 }
 if (userPasswordForm) {
@@ -12391,7 +12391,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49193" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52746" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

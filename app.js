@@ -13,6 +13,7 @@ const tourRouter = require("./Routes/tourRoutes");
 const userRouter = require("./Routes/userRoutes");
 const globalErrorHandler = require("./controllers/errorController");
 const reviewRoute = require("./Routes/reviewRouter");
+const bookingRouter = require("./Routes/bookingRoutes");
 const viewRoute = require("./Routes/viewRoutes");
 
 // const globalErrorHandler = require("./dev-data/data/import-dev-data");
@@ -75,6 +76,7 @@ app.use("/", viewRoute);
 app.use("/api/v1/tours", tourRouter); // This acts as a middleware that is when new request hits it goes into middleware stack
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/reviews", reviewRoute);
+app.use("/api/v1/bookings", bookingRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Cannot find ${req.originalUrl} on the server`, 404));

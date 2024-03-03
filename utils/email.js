@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const pug = require("pug");
 const htmlToText = require("html-to-text");
+const Transport = require("nodemailer-brevo-transport");
 
 // new Email(user,url).sendWelcome()
 module.exports = class Email {
@@ -13,16 +14,19 @@ module.exports = class Email {
 
   newTransport() {
     if (process.env.NODE_ENV === "production") {
-      return 1;
+      console.log(process.env.BREVO_USERNAME);
+      // return nodemailer.createTransport({
+      //   service:'SendinBlue',
+      //   auth:{
+      //     user: process.env.BREVO_USERNAME,
+      //     pass:process.env.BREVO_PASSWORD
+      //   }
+      // })
+      const transporter = nodemailer.createTransport(
+        new Transport({ apiKey: process.env.BREVO_PASSWORD })
+      );
+      return transporter;
     }
-    return nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      auth: {
-        user: process.env.EMAIL_USERNAME,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
   }
   async send(template, subject) {
     //send the actual email
@@ -32,6 +36,7 @@ module.exports = class Email {
       url: this.url,
       subject,
     });
+    // console.log(html);
 
     //2)Define email options
     const mailOptions = {
@@ -39,7 +44,7 @@ module.exports = class Email {
       to: this.to,
       subject,
       html,
-      text: htmlToText.fromString(html),
+      text: htmlToText.convert(html),
     };
 
     //3) Create a transport and send email
@@ -48,6 +53,12 @@ module.exports = class Email {
   }
   async sendWelcome() {
     await this.send("welcome", "Welcome to the Natours Family");
+  }
+  async sendPasswordReset() {
+    await this.send(
+      "passwordReset",
+      "Your password reset token valid for only 10 minutes"
+    );
   }
 };
 

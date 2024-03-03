@@ -5,7 +5,7 @@ mixin navItem(link,text,icon,active)
         a(href=`${link}`)
             svg
                 use(xlink:href=`img/icons.svg#icon-${icon}`)
-            | My bookings
+            | #{text}
 
 block content 
     main.main
@@ -13,7 +13,7 @@ block content
             nav.user-view__menu
                 ul.side-nav
                     +navItem('#','Settings','settings',true)
-                    +navItem('#','My Bookings','briefcase')
+                    +navItem('/my-tours', 'My Bookings','briefcase')
                     +navItem('#','My reviews','star')
                     +navItem('#','Billing','credit-card')
 

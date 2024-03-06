@@ -2,3 +2,5 @@ node_modules
 # Ignore bundled files
 /dist/
 *.json
+.env
+config.env

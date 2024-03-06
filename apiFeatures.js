@@ -18,7 +18,7 @@ class apiFeatures {
         (match) => `$${match}`
       );
   
-      console.log(JSON.parse(queryString));
+      // console.log(JSON.parse(queryString));
   
       this.query = this.query.find(JSON.parse(queryString));
   
@@ -27,7 +27,7 @@ class apiFeatures {
     sort() {
       if (this.queryString.sort) {
         const sortBy = this.queryString.sort.split(",").join(" "); //here we used split and join because if we want to sort by multiple keys like price and ratingsaverage we need to seperate them and join
-        console.log(sortBy, "sortBy");
+        // console.log(sortBy, "sortBy");
         this.query = this.query.sort(sortBy);
       } else {
         this.query = this.query.sort("-createdAt");

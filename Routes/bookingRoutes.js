@@ -13,7 +13,7 @@ router.get(
 );
 
 router
-  .use("/")
+  .route("/")
   .get(bookingController.getAllBooking)
   .post(bookingController.createBooking);
 

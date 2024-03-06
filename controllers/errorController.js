@@ -7,24 +7,24 @@ const handleCastErrDB = (err) => {
 
 const handleDuplicateFieldsDB = (err) => {
   // console.log(err,'errindupfields')
-  console.log(err.errmsg, "err.errmsg");
+  // console.log(err.errmsg, "err.errmsg");
   const value = err.errmsg.match(/(["'])(\\?.)*?\1/);
-  console.log(value, "regex");
+  // console.log(value, "regex");
   const message = `Duplicate field values : ${value}, Please use another value`;
   return new AppError(message, 404);
 };
 
 const handleValidationErrorDB = (err) => {
-  console.log(err, "errinvalidatondb");
+  // console.log(err, "errinvalidatondb");
   const errors = Object.values(err.errors).map((el) => el.message);
   const message = `Invalid input data. ${errors.join(". ")}`;
   return new AppError(message, 400);
 };
 
-const handleJWT = () => new AppError('Invalid token ! Please Login again',401)
+const handleJWT = () => new AppError("Invalid token ! Please Login again", 401);
 
-const handleJwtExpiredError = () => new AppError('Your token has been expired ! Please Login again',401)
- 
+const handleJwtExpiredError = () =>
+  new AppError("Your token has been expired ! Please Login again", 401);
 
 const sendErrDev = (err, req, res) => {
   if (req.originalUrl.startsWith("/api")) {
@@ -75,16 +75,16 @@ const sendErrProd = (err, req, res) => {
 };
 
 module.exports = (err, req, res, next) => {
-  console.log(err, "ERRRR");
+  // console.log(err, "ERRRR");
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
-  console.log(process.env.NODE_ENV, "process.env.NODE_ENV");
+  // console.log(process.env.NODE_ENV, "process.env.NODE_ENV");
   if (process.env.NODE_ENV === "development") {
     sendErrDev(err, req, res);
   } else if (process.env.NODE_ENV === "production") {
-    console.log(process.env.NODE_ENV, "process.env.Node");
-    console.log(err, "errinprod");
-    console.log(err.name, "errorname");
+    // console.log(process.env.NODE_ENV, "process.env.Node");
+    // console.log(err, "errinprod");
+    // console.log(err.name, "errorname");
     let error = { ...err };
     error.message = err.message;
     // error.name = err.name

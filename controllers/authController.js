@@ -5,6 +5,7 @@ const User = require("./../models/UserModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("../utils/appError");
 const Email = require("../utils/email");
+//
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -24,13 +25,19 @@ const createSendToken = (user, statusCode, res) => {
   res.cookie("jwt", token, cookieOptions);
   //Remove the password from the output
   user.password = undefined;
-  res.status(statusCode).json({
-    status: "success",
-    token,
-    data: {
-      user,
-    },
-  });
+  res
+    .status(statusCode)
+    .set(
+      "Content-Security-Policy",
+      "connect-src 'self' https://*.mapbox.com https://js.stripe.com/v3/;base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src https://js.stripe.com/v3/ https://cdnjs.cloudflare.com https://api.mapbox.com 'self' blob: ;script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;"
+    )
+    .json({
+      status: "success",
+      token,
+      data: {
+        user,
+      },
+    });
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
@@ -45,7 +52,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   });
   const url = `${req.protocol}://${req.get("host")}/me`;
   // console.log(url);
-  await new Email(newUser, url).sendWelcome();
+  // await new Email(newUser, url).sendWelcome();
   createSendToken(newUser, 201, res);
 });
 
